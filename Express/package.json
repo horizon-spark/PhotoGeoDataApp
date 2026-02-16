@@ -5,7 +5,8 @@
     "express": "^5.2.1",
     "mongodb": "^7.1.0",
     "mongoose": "^9.2.1",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "pug": "^3.0.3"
   },
   "name": "express",
   "version": "1.0.0",
