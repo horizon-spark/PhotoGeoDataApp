@@ -4,12 +4,12 @@
     "exifreader": "^4.36.1",
     "express": "^5.2.1",
     "mongodb": "^7.1.0",
+    "mongoose": "^9.2.1",
     "multer": "^2.0.2"
   },
   "name": "express",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
