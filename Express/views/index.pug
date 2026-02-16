@@ -1,0 +1,12 @@
+extends layout.pug 
+
+block title     
+    <title>#{title}</title>
+
+block content 
+    <h1>Выберите файл (используется Pug)</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <label>Файл</label> <br />
+      <input type="file" name="filedata" /> <br /><br />
+      <input type="submit" value="Отправить" />
+    </form>

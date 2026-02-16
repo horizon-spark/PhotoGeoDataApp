@@ -1,0 +1,36 @@
+extends layout.pug
+
+block title     
+    <title>#{title}</title>
+
+block content 
+    <h2>📊 Статистика загрузок</h2>
+        <div id="stats">Загрузка...</div>
+        
+    <h3>Последние 10 загрузок</h3>
+    <table>
+    <tr>
+        <th>Файл</th>
+        <th>Дата</th>
+        <th>GPS</th>
+    </tr>
+    each upload in recentUploads
+        <tr>
+          <td>#{upload.fileName}</td>
+          <td>#{upload.uploadDate.toLocaleString()}</td>
+          <td>#{upload.hasGps ? "✅" : "❌"}</td>
+        </tr>
+    </table>
+    <br>
+    <a href="/">← Назад</a>
+    script.
+        fetch('/api/stats')
+        .then(r => r.json())
+        .then(s => {
+            document.getElementById('stats').innerHTML = `
+            <p>Всего загрузок: ${s.totalUploads}</p>
+            <p>С GPS: ${s.filesWithGps} (${s.percentWithGps?.toFixed(1)}%)</p>
+            <p>Ср. размер: ${s.avgFileSizeMB?.toFixed(2)} MB</p>
+            <p>Уникальных посетителей: ${s.uniqueVisitors}</p>
+            `;
+        });

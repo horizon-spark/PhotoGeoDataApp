@@ -1,0 +1,27 @@
+extends layout.pug 
+
+block title 
+    <title>#{title}</title>
+
+block content 
+    <h2>Результат обработки</h2>
+
+    if hasGps
+        <div class="info">
+          <h3 class="success">✅ GPS данные найдены!</h3>
+          <p>Широта: #{lat}</p>
+          <p>Долгота: #{lon}</p>
+          <p>Высота: #{alt} м</p>
+          <p>ID в БД: #{dbId}</p>
+          <a class="map-link" href="https://www.google.com/maps?q=#{lat},#{lon}" target="_blank">🌍 Открыть на карте</a>
+        </div>
+    else 
+        <div class="info">
+          <h3>❌ GPS данные не найдены</h3>
+          <p>Файл сохранен в истории (ID: #{dbId})</p>
+        </div>
+    
+    <br>
+    <a href="/">← Загрузить другой файл</a>
+    <br><br>
+    <a href="/stats">📊 Статистика</a>

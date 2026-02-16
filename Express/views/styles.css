@@ -1,0 +1,37 @@
+body {
+  font-family: Arial;
+  padding: 20px;
+}
+.success {
+  color: green;
+}
+.info {
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+}
+.map-link {
+  background: #4285f4;
+  color: white;
+  padding: 5px 10px;
+  text-decoration: none;
+  border-radius: 3px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+footer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
