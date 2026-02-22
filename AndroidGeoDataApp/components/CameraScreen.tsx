@@ -11,6 +11,9 @@ import { Image } from "expo-image";
 import { useRef, useState } from "react";
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 
+import { File, Paths } from "expo-file-system";
+import { fetch } from "expo/fetch";
+
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef<CameraView>(null);
@@ -58,6 +61,17 @@ export default function CameraScreen() {
     setFacing((prev) => (prev === "back" ? "front" : "back"));
   };
 
+  const sendPhoto = async (uri: string) => {
+    const photo = new File(Paths.cache, uri);
+    const response = await fetch("https://example.com", {
+      method: "POST",
+      body: photo,
+    });
+    if (!response.ok) {
+      console.log("Upload failed");
+    }
+  };
+
   const renderPicture = (uri: string) => {
     console.log(uri);
     return (
@@ -68,6 +82,10 @@ export default function CameraScreen() {
           style={{ width: 300, aspectRatio: 1 }}
         />
         <Button onPress={() => setUri(null)} title="Take another picture" />
+        <Button
+          onPress={async () => await sendPhoto(uri)}
+          title="Send to server"
+        />
       </View>
     );
   };

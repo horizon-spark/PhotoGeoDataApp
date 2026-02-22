@@ -1,13 +1,3 @@
-// import { Stack } from "expo-router";
-
-// export default function RootLayout() {
-//   return (
-//     <Stack>
-//       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-//     </Stack>
-//   );
-// }
-
 import React from "react";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import CameraComponent from "../components/CameraComponent";
@@ -22,7 +12,7 @@ const App: React.FC = () => {
       <StatusBar barStyle="light-content" />
       <CameraComponent
         onPhotoUploaded={handlePhotoUploaded}
-        serverUrl="http://192.168.56.1:3000/upload"
+        serverUrl="https://your-server.com/api/upload"
       />
     </SafeAreaView>
   );

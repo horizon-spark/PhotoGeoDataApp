@@ -3,8 +3,10 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import Button from "@/components/Button";
-import CameraScreen from "@/components/CameraScreen";
 import ImageViewer from "@/components/ImageViewer";
+
+import { File, Paths } from "expo-file-system";
+import { fetch } from "expo/fetch";
 
 const PlaceholderImage = require("@/assets/images/cat-image.jpg");
 
@@ -28,8 +30,17 @@ export default function Index() {
     }
   };
 
-  let startCamera = () => {
-    return <CameraScreen />;
+  let sendSelectedImage = async () => {
+    const uri = selectedImage === undefined ? "noUri" : selectedImage;
+    console.log(uri);
+    const photo = new File(Paths.cache, uri);
+    let response = await fetch("https://example.com", {
+      method: "POST",
+      body: photo,
+    });
+    if (!response.ok) {
+      console.log("Upload failed");
+    }
   };
 
   return (
@@ -46,8 +57,11 @@ export default function Index() {
           label="Choose a photo"
           onPress={pickImageAsync}
         />
-        <Button theme="primary" label="Take a photo" onPress={startCamera} />
-        <Button label="Use this photo" />
+        <Button
+          theme="primary"
+          label="Send to server"
+          onPress={sendSelectedImage}
+        />
       </View>
     </View>
   );
