@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs/promises";
+import cors from "cors";
 import mongoose from "mongoose";
 import { getGpsFromFile } from "./helpers/getGpsFromFile.js";
 import GpsData from "./models/GpsData.js";
@@ -15,6 +16,7 @@ await mongoose.connect("mongodb://localhost:27017/gpsdb");
 
 app.use(express.static(__dirname));
 app.use(express.json());
+app.use(cors());
 
 const upload = multer({ dest: "uploads/" });
 
