@@ -29,7 +29,10 @@ app.get("/", (req, res) => {
 app.post("/upload", upload.single("filedata"), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).send("Ошибка при загрузке файла");
+      return res.status(400).json({
+        success: false,
+        error: "Ошибка при загрузке файла",
+      });
     }
 
     const clientIp = req.ip || req.connection.remoteAddress;
@@ -42,10 +45,18 @@ app.post("/upload", upload.single("filedata"), async (req, res) => {
       .unlink(req.file.path)
       .catch((e) => console.log("Не удалось удалить файл:", e.message));
 
-    res.render("results", { ...gpsResult, title: "Результат" });
+    res.json({
+      success: true,
+      ...gpsResult,
+      message: "Фото успешно обработано",
+    });
   } catch (error) {
     console.error("Ошибка сервера:", error);
-    res.status(500).send("Внутренняя ошибка сервера");
+    res.status(500).json({
+      success: false,
+      error: "Внутренняя ошибка сервера",
+      details: error.message,
+    });
   }
 });
 

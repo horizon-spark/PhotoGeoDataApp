@@ -35,7 +35,7 @@ interface PhotoState {
 
 const CameraComponent: React.FC<CameraComponentProps> = ({
   onPhotoUploaded,
-  serverUrl = "http://192.168.56.1:3000/upload",
+  serverUrl = "http://192.168.0.15:3000/upload",
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
   // const [hasMediaPermission, setHasMediaPermission] = useState<boolean | null>(
@@ -63,6 +63,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
           quality: 0.8,
           base64: false,
           skipProcessing: false,
+          exif: true,
         });
 
         if (photo) {
@@ -101,7 +102,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
       formData.append("filedata", {
         uri: photo.uri,
         type: "image/jpeg",
-        name: "photo.jpg",
+        name: `photo_${Date.now()}.jpg`,
       } as any);
 
       // Добавляем дополнительные данные если нужно
@@ -114,10 +115,25 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
         body: formData,
         headers: {
           "Content-Type": "multipart/form-data",
+          Accept: "application/json",
         },
       });
 
-      const result: UploadResponse = await response.json();
+      console.log("Статус ответа:", response.status);
+
+      // Получаем текст ответа для диагностики
+      const responseText = await response.text();
+      console.log(
+        "Ответ сервера (первые 100 символов):",
+        responseText.substring(0, 100),
+      );
+
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("Ошибка парсинга JSON:", parseError);
+      }
 
       if (response.ok) {
         Alert.alert("Успешно", "Фото отправлено на сервер");

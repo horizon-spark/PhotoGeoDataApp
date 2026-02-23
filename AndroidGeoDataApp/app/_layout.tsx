@@ -22,7 +22,7 @@ const App: React.FC = () => {
       <StatusBar barStyle="light-content" />
       <CameraComponent
         onPhotoUploaded={handlePhotoUploaded}
-        serverUrl="http://192.168.56.1:3000/upload"
+        serverUrl="http://192.168.0.15:3000/upload"
       />
     </SafeAreaView>
   );
