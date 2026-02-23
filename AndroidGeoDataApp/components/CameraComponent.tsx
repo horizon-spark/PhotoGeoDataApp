@@ -1,7 +1,7 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-// import * as MediaLibrary from "expo-media-library";
-import React, { useRef, useState } from "react";
+import * as Location from "expo-location";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -31,6 +31,7 @@ interface PhotoState {
   uri: string;
   width?: number;
   height?: number;
+  exif?: object;
 }
 
 const CameraComponent: React.FC<CameraComponentProps> = ({
@@ -38,9 +39,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   serverUrl = "http://192.168.0.15:3000/upload",
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
-  // const [hasMediaPermission, setHasMediaPermission] = useState<boolean | null>(
-  //   null,
-  // );
+  const [locationPermission, setLocationPermission] = useState<boolean>(false);
   const [facing, setFacing] = useState<"back" | "front">("back");
   const [flash, setFlash] = useState<"off" | "on" | "auto">("off");
   const [photo, setPhoto] = useState<PhotoState | null>(null);
@@ -48,25 +47,42 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
 
   const cameraRef = useRef<CameraView | null>(null);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     // Запрашиваем разрешение на доступ к медиатеке
-  //     const mediaStatus = await MediaLibrary.requestPermissionsAsync();
-  //     setHasMediaPermission(mediaStatus.status === "granted");
-  //   })();
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      setLocationPermission(status === "granted");
+    })();
+  }, []);
 
   const takePhoto = async (): Promise<void> => {
     if (cameraRef.current) {
       try {
+        let additionalExif = {};
+
+        if (locationPermission) {
+          const location = await Location.getCurrentPositionAsync({});
+          additionalExif = {
+            GPSLatitude: location.coords.latitude,
+            GPSLongitude: location.coords.longitude,
+            GPSAltitude: location.coords.altitude,
+          };
+        }
+
         const photo = await cameraRef.current.takePictureAsync({
           quality: 0.8,
           base64: false,
           skipProcessing: false,
           exif: true,
+          additionalExif: additionalExif,
         });
 
         if (photo) {
+          // Проверка GPS данных
+          console.log(
+            "GPS:",
+            photo.exif?.GPSLatitude,
+            photo.exif?.GPSLongitude,
+          );
           // Опционально: сжимаем изображение перед отправкой
           const compressedPhoto = await manipulateAsync(
             photo.uri,
@@ -78,6 +94,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
             uri: compressedPhoto.uri,
             width: compressedPhoto.width,
             height: compressedPhoto.height,
+            exif: photo.exif,
           });
         }
       } catch (error) {
@@ -105,6 +122,10 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
         name: `photo_${Date.now()}.jpg`,
       } as any);
 
+      if (photo.exif) {
+        formData.append("exif", JSON.stringify(photo.exif));
+      }
+
       // Добавляем дополнительные данные если нужно
       formData.append("timestamp", new Date().toISOString());
       formData.append("deviceInfo", "mobile");
@@ -125,7 +146,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
       const responseText = await response.text();
       console.log(
         "Ответ сервера (первые 100 символов):",
-        responseText.substring(0, 100),
+        responseText.substring(0, 150),
       );
 
       let result;
@@ -137,11 +158,6 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
 
       if (response.ok) {
         Alert.alert("Успешно", "Фото отправлено на сервер");
-
-        // Сохраняем в галерею если есть разрешение
-        // if (hasMediaPermission) {
-        //   await MediaLibrary.saveToLibraryAsync(photo.uri);
-        // }
 
         // Вызываем callback если передан
         if (onPhotoUploaded) {

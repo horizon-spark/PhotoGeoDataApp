@@ -1,10 +1,10 @@
+import cors from "cors";
 import express from "express";
+import fs from "fs/promises";
+import mongoose from "mongoose";
 import multer from "multer";
 import path from "path";
-import fs from "fs/promises";
-import cors from "cors";
-import mongoose from "mongoose";
-import { getGpsFromFile } from "./helpers/getGpsFromFile.js";
+import { getGpsFromExif } from "./helpers/getGpsFromExif.js";
 import GpsData from "./models/GpsData.js";
 
 const __dirname = path.resolve();
@@ -39,7 +39,7 @@ app.post("/upload", upload.single("filedata"), async (req, res) => {
 
     console.log(`📸 Файл загружен: ${req.file.originalname} с IP ${clientIp}`);
 
-    const gpsResult = await getGpsFromFile(req.file, clientIp);
+    const gpsResult = await getGpsFromExif(req.file, req.body.exif, clientIp);
 
     await fs
       .unlink(req.file.path)

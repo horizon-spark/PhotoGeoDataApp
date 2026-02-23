@@ -55,6 +55,12 @@
           "isAccessMediaLocationEnabled": true,
           "granularPermissions": ["audio", "photo"]
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
       ]
     ],
     "experiments": {
