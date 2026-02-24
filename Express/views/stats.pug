@@ -18,7 +18,10 @@ block content
         <tr>
           <td>#{upload.fileName}</td>
           <td>#{upload.uploadDate.toLocaleString()}</td>
-          <td>#{upload.hasGps ? "✅" : "❌"}</td>
+          if upload.coordinates.lat && upload.coordinates.lon 
+            <td>#{upload.coordinates.lat}:#{upload.coordinates.lon}</td>
+          else 
+            <td>Координаты не найдены</td>
         </tr>
     </table>
     <br>
