@@ -2,9 +2,51 @@ extends layout.pug
 
 block title 
     title #{title}
+    script(src=`https://api-maps.yandex.ru/v3/?apikey=${API_KEY}&lang=ru_RU`)
 
 block content 
     h2 Фото
-    -console.log(upload);
     img(src=`/${upload.filePath}`, alt="Ваше фото")
+    div(id="map", style="width: 600px; height: 400px")
 
+    script.
+        const upload = !{JSON.stringify(upload)};
+
+        initMap();
+
+        async function initMap() {
+            await ymaps3.ready;
+
+            const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } = ymaps3;
+
+            let lat = 37.588144, lon = 55.733842;
+
+            if (upload.coordinates.lat && upload.coordinates.lon) {
+                lat = upload.coordinates.lat;
+                lon = upload.coordinates.lon;
+            }
+
+            const map = new YMap(document.getElementById("map"), {
+                location: {
+                center: [lon, lat],
+                zoom: 10,
+                },
+            });
+
+            map.addChild(new YMapDefaultSchemeLayer());
+            map.addChild(new YMapDefaultFeaturesLayer());
+
+            const content = document.createElement('section');
+
+            const marker = new YMapMarker(
+            {
+                coordinates: [lon, lat],
+                draggable: true
+            },
+            content
+            );
+
+            map.addChild(marker);
+
+            content.innerHTML = '<h1>X</h1>';
+        }
