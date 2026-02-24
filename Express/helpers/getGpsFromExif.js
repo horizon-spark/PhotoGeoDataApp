@@ -27,6 +27,7 @@ export const getGpsFromExif = async (file, rawExif, clientIp) => {
       const gpsData = new GpsData({
         fileName: file.originalname,
         fileSize: file.size,
+        filePath: file.path,
         mimeType: file.mimetype,
         clientIp: clientIp,
         coordinates: gpsInfo,
@@ -34,7 +35,7 @@ export const getGpsFromExif = async (file, rawExif, clientIp) => {
       });
 
       await gpsData.save();
-      console.log(`💾 Данные сохранены в MongoDB, ID: ${gpsData._id}`);
+      console.log(`Данные сохранены в MongoDB, ID: ${gpsData._id}`);
 
       return {
         ...gpsInfo,
@@ -48,6 +49,7 @@ export const getGpsFromExif = async (file, rawExif, clientIp) => {
         const failedUpload = new GpsData({
           fileName: file.originalname,
           fileSize: file.size,
+          filePath: file.path,
           mimeType: file.mimetype,
           clientIp: clientIp,
           coordinates: { lat: null, lon: null, alt: null },

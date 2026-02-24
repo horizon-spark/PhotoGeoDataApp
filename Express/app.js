@@ -1,6 +1,6 @@
 import cors from "cors";
 import express from "express";
-import fs from "fs/promises";
+// import fs from "fs/promises";
 import mongoose from "mongoose";
 import multer from "multer";
 import path from "path";
@@ -37,13 +37,14 @@ app.post("/upload", upload.single("filedata"), async (req, res) => {
 
     const clientIp = req.ip || req.connection.remoteAddress;
 
-    console.log(`📸 Файл загружен: ${req.file.originalname} с IP ${clientIp}`);
+    console.log(`Файл загружен: ${req.file.originalname} с IP ${clientIp}`);
+    console.log(`Имя файла в хранилище сервера: ${req.file.path}`);
 
     const gpsResult = await getGpsFromExif(req.file, req.body.exif, clientIp);
 
-    await fs
-      .unlink(req.file.path)
-      .catch((e) => console.log("Не удалось удалить файл:", e.message));
+    // await fs
+    //   .unlink(req.file.path)
+    //   .catch((e) => console.log("Не удалось удалить файл:", e.message));
 
     res.json({
       success: true,
@@ -110,11 +111,20 @@ app.get("/stats", async (req, res) => {
     const recentUploads = await GpsData.find()
       .sort({ uploadDate: -1 })
       .limit(10)
-      .select("fileName uploadDate coordinates hasGps");
+      .select("id fileName uploadDate coordinates hasGps");
 
     res.render("stats", { recentUploads });
   } catch (error) {
     res.status(500).send("Ошибка загрузки статистики");
+  }
+});
+
+app.get("/upload/:uploadId", async (req, res) => {
+  try {
+    const upload = await GpsData.findById(req.params["uploadId"]);
+    res.render("photo", { upload });
+  } catch (error) {
+    res.status(500).send("Ошибка загрузки фото");
   }
 });
 

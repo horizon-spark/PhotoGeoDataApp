@@ -11,6 +11,9 @@ const gpsDataSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    filePath: {
+      type: String,
+    },
     mimeType: {
       type: String,
       required: true,
