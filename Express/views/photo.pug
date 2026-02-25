@@ -12,12 +12,19 @@ block content
     script.
         const upload = !{JSON.stringify(upload)};
 
+    script(type="module").
+
+        ymaps3.import.registerCdn('https://cdn.jsdelivr.net/npm/{package}', [
+            '@yandex/ymaps3-default-ui-theme@latest'
+        ]);
+
         initMap();
 
         async function initMap() {
             await ymaps3.ready;
 
-            const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } = ymaps3;
+            const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer } = ymaps3;
+            const { YMapDefaultMarker } = await ymaps3.import('@yandex/ymaps3-default-ui-theme')
 
             let lat = 37.588144, lon = 55.733842;
 
@@ -36,17 +43,10 @@ block content
             map.addChild(new YMapDefaultSchemeLayer());
             map.addChild(new YMapDefaultFeaturesLayer());
 
-            const content = document.createElement('section');
-
-            const marker = new YMapMarker(
-            {
-                coordinates: [lon, lat],
-                draggable: true
-            },
-            content
+            map.addChild(
+                new YMapDefaultMarker({
+                    coordinates: [lon, lat],
+                    title: "Сделано здесь",
+                })
             );
-
-            map.addChild(marker);
-
-            content.innerHTML = '<h1>X</h1>';
         }
