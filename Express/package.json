@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
+    "@yandex/ymaps3-default-ui-theme": "^0.0.24",
     "cors": "^2.8.6",
     "exif-parser": "^0.1.12",
     "exifreader": "^4.36.1",
