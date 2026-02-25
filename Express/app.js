@@ -20,9 +20,15 @@ app.use(cors());
 
 const upload = multer({ dest: "uploads/" });
 
-app.get("/", (req, res) => {
-  res.render("index", {
+app.get("/", (_, res) => {
+  res.render("pages/index", {
     title: "Главная страница",
+  });
+});
+
+app.get("/upload", (_, res) => {
+  res.render("pages/upload", {
+    title: "Загрузка файла",
   });
 });
 
@@ -61,7 +67,7 @@ app.post("/upload", upload.single("filedata"), async (req, res) => {
   }
 });
 
-app.get("/api/stats", async (req, res) => {
+app.get("/api/stats", async (_, res) => {
   try {
     const stats = await GpsData.aggregate([
       {
@@ -106,14 +112,14 @@ app.get("/api/stats", async (req, res) => {
   }
 });
 
-app.get("/stats", async (req, res) => {
+app.get("/stats", async (_, res) => {
   try {
     const recentUploads = await GpsData.find()
       .sort({ uploadDate: -1 })
       .limit(10)
       .select("id fileName uploadDate coordinates hasGps");
 
-    res.render("stats", { recentUploads });
+    res.render("pages/stats", { recentUploads });
   } catch (error) {
     res.status(500).send("Ошибка загрузки статистики");
   }
@@ -122,7 +128,7 @@ app.get("/stats", async (req, res) => {
 app.get("/upload/:uploadId", async (req, res) => {
   try {
     const upload = await GpsData.findById(req.params["uploadId"]);
-    res.render("photo", { upload });
+    res.render("pages/photo", { upload });
   } catch (error) {
     res.status(500).send("Ошибка загрузки фото");
   }
