@@ -1,5 +1,6 @@
 import React from "react";
-import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import CameraComponent from "../components/CameraComponent";
 
 const App: React.FC = () => {
@@ -12,7 +13,7 @@ const App: React.FC = () => {
       <StatusBar barStyle="light-content" />
       <CameraComponent
         onPhotoUploaded={handlePhotoUploaded}
-        serverUrl="https://your-server.com/api/upload"
+        serverUrl="http://192.168.0.15:3000/upload"
       />
     </SafeAreaView>
   );

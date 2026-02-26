@@ -1,5 +1,4 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import * as Location from "expo-location";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -83,17 +82,11 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
             photo.exif?.GPSLatitude,
             photo.exif?.GPSLongitude,
           );
-          // Опционально: сжимаем изображение перед отправкой
-          const compressedPhoto = await manipulateAsync(
-            photo.uri,
-            [{ resize: { width: 1080 } }],
-            { compress: 0.7, format: SaveFormat.JPEG },
-          );
 
           setPhoto({
-            uri: compressedPhoto.uri,
-            width: compressedPhoto.width,
-            height: compressedPhoto.height,
+            uri: photo.uri,
+            width: photo.width,
+            height: photo.height,
             exif: photo.exif,
           });
         }
