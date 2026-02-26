@@ -22,8 +22,8 @@
   --text-muted: #9b9b9b; /* Совсем светлый */
 
   /* Фоны - теплые светлые */
-  --bg-main: #f8f5f2; /* Основной фон с теплым оттенком */
-  --bg-surface: #ffffff; /* Белый для поверхностей */
+  --bg-main: #e9e9e9; /* Основной фон с теплым оттенком */
+  --bg-surface: #f4f4f4; /* Белый для поверхностей */
   --bg-surface-soft: #faf8f6; /* Мягкий кремовый */
   --bg-hover: #f3efe9; /* При наведении */
 
@@ -377,8 +377,13 @@ td a:hover {
 footer {
   background: var(--bg-surface);
   border-top: var(--border-soft);
-  padding: 2rem;
+  padding: 1rem;
   margin-top: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .footer-container {
@@ -435,7 +440,6 @@ a[href="/"]:hover {
 }
 
 a[href="/"]::before {
-  content: "←";
   font-size: 1rem;
 }
 

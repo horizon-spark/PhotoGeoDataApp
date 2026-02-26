@@ -4,7 +4,7 @@ block title
     title #{title}
 
 block content 
-    h1 📊 Статистика загрузок
+    h1 Статистика загрузок
         div(id="stats") Загрузка...
         
     h3 Последние 10 загрузок
@@ -28,7 +28,7 @@ block content
                 td 
                     a(href=`/upload/${upload.id}`) Просмотр
     br
-    a(href="/") ← Назад
+    a(href="/") Назад
     script.
         fetch('/api/stats')
         .then(r => r.json())
