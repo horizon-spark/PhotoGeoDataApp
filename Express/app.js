@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import multer from "multer";
 import path from "path";
 import { getGpsFromExif } from "./helpers/getGpsFromExif.js";
+import { getGpsFromFile } from "./helpers/getGpsFromFile.js";
 import GpsData from "./models/GpsData.js";
 
 const __dirname = path.resolve();
@@ -46,7 +47,12 @@ app.post("/upload", upload.single("filedata"), async (req, res) => {
     console.log(`Файл загружен: ${req.file.originalname} с IP ${clientIp}`);
     console.log(`Имя файла в хранилище сервера: ${req.file.path}`);
 
-    const gpsResult = await getGpsFromExif(req.file, req.body.exif, clientIp);
+    let gpsResult = {};
+    if (req.body.exif) {
+      gpsResult = await getGpsFromExif(req.file, req.body.exif, clientIp);
+    } else {
+      gpsResult = await getGpsFromFile(req.file, clientIp);
+    }
 
     // await fs
     //   .unlink(req.file.path)

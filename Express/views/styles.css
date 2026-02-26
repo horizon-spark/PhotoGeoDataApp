@@ -598,3 +598,9 @@ small,
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
 }
+
+img {
+  width: 50vw;
+  margin: 1rem;
+  border-radius: 5px;
+}
